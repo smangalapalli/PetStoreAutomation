@@ -60,6 +60,16 @@ package api.endpoints;
   19. First time you have to use these 2 cmds: 
   		 git config --global user.name "Sandhya Mangalapalli"
   		 git config --global user.email "sandhya.mangalapalli@gmail.com"
+  20. Check the status of the files (git status)--tells the files which are untracked marked in Red which are in the working directory which needs to be added to the staging area.
+  21. Use git add cmd to add the untracked files to the staging area.
+  		git add -A
+  		git add filename.java or git add filename.ext
+  		git add *.java or git add *.ext
+  		git add foldername
+  22. commit our files from staging to git repository (local repository)
+  		git commit -m "This is my first commit"
+  
+  
 
 
   
