@@ -1,11 +1,14 @@
 package api.test;
 
+import java.io.File;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import com.github.javafaker.Faker;
+
 
 import api.endpoints.PetEndPoints;
 import api.payload.Category;
@@ -15,7 +18,7 @@ import io.restassured.response.Response;
 
 public class PetTests {
 	Faker faker;		
-	Pet petPayload;  //Create User Objects	
+	Pet petPayload;  //Create Pet Objects	
 	Category category;
 	Tag tag1, tag2, tag3;
 	String [] p_photoUrls = {"https://klike.net/uploads/posts/2023-01/1675061232_3-62.jpg", "two.jpg", "three.jpg"};
@@ -31,21 +34,25 @@ public class PetTests {
 		category.setId(faker.idNumber().hashCode());
 		category.setName(faker.name().name());
 		
+		faker = new Faker();
 		Tag tag1 = new Tag();
 		tag1.setId(faker.idNumber().hashCode());
 		tag1.setName(faker.name().name());
 		tags[0] = tag1;
 		
+		faker = new Faker();
 		Tag tag2 = new Tag();
 		tag2.setId(faker.idNumber().hashCode());
 		tag2.setName(faker.name().name());
 		tags[1] = tag2;
 		
+		faker = new Faker();
 		Tag tag3 = new Tag();
 		tag3.setId(faker.idNumber().hashCode());
 		tag3.setName(faker.name().name());
 		tags[2] = tag3;
 		
+		faker = new Faker();
 		petPayload = new Pet();
 		petPayload.setId(faker.idNumber().hashCode());
 		petPayload.setCategory(category);
@@ -60,6 +67,22 @@ public class PetTests {
 	}	
 	
 	@Test(priority = 1)
+	public void UploadPetImage() {
+		logger.info("**************Uploading Pet Image **************");	
+		File img_filename = new File("src/test/resources/dog3.jpg");		
+		String add_metadata = "this is additional metadata";
+		System.out.println("img_filename " + img_filename);
+		Response res = PetEndPoints.uploadImage(this.petPayload.getId(), img_filename, add_metadata);		
+		res.then().log().all();
+		Assert.assertEquals(res.getStatusCode(), 200);
+		
+		// Print the response body
+		System.out.println("Upload Image Response Body is: " + res.getBody().asString());
+		
+		logger.info("**************Uploaded Pet image **************");
+	}
+	
+	@Test(priority = 2)
 	public void TestPostPet() {
 		logger.info("**************Creating Pet **************");	
 		Response res = PetEndPoints.createPet(petPayload);
@@ -72,8 +95,7 @@ public class PetTests {
 		logger.info("**************Pet is Created **************");
 	}
 
-	
-	@Test(priority = 2)
+	@Test(priority = 3)
 	public void TestGetPetByStatus() {
 		logger.info("**************Pets By Status **************");
 		Response res = PetEndPoints.readStatus();
@@ -87,7 +109,7 @@ public class PetTests {
 		logger.info("**************Pets by status is displayed **************");
 	}
 	
-	@Test(priority = 3)
+	@Test(priority = 4)
 	public void TestGetPetByID() {
 		logger.info("**************Pet By ID **************");
 		Response res = PetEndPoints.readId(this.petPayload.getId());
@@ -100,125 +122,57 @@ public class PetTests {
 		
 		logger.info("**************Pet by ID is displayed **************");
 	}
-	/*
-	@Test(priority = 3)
-	public void TestUpdateByUserName() {
-		
-		//update Data using payload
-		logger.info("**************Updating User **************");
-		userPayload.setFirstName(faker.name().firstName());
-		userPayload.setLastName(faker.name().lastName());
-		userPayload.setEmail(faker.internet().safeEmailAddress());
-		
-		Response res = UserEndPoints.updateUser(this.userPayload.getUsername(),userPayload);
-		res.then().log().all();
-		res.then().log().body().statusCode(200);
-		Assert.assertEquals(res.getStatusCode(), 200);
-		
-		//Checking data after update		
-		Response respafterupdate = UserEndPoints.readUser(this.userPayload.getUsername());
-		respafterupdate.then().log().all();
-		respafterupdate.statusCode();
-		Assert.assertEquals(respafterupdate.getStatusCode(), 200);
-		logger.info("**************User is Updated **************");
-	}
-	
-	@Test(priority = 8)
-	public void TestDeleteByUserName() {
-		logger.info("**************Deleting User **************");
-		Response res = UserEndPoints.deleteUser(this.userPayload.getUsername());
-		res.then().log().all();
-		res.statusCode();
-		Assert.assertEquals(res.getStatusCode(), 200);
-		logger.info("**************User is Deleted **************");
-	}
-	
-	
-	@Test(priority = 4)
-	public void TestPostUserWithList() {		
-	
-		logger.info("**************Creating User List **************");	
-		
-		Response res = UserEndPoints.createUserWithList(users);
-		res.then().log().all();
-		
-		// Verify the response status code
-		Assert.assertEquals(res.getStatusCode(), 200);
-		
-        // Verify the response content type
-        Assert.assertEquals(res.getContentType(), "application/json", "Expected content type is application/json");
-		
-        // Print the response body
-		System.out.println("Created List Of Users Response Body is: " + res.getBody().asString());
-		
-		logger.info("**************User List is Created **************");
-	}
 	
 	@Test(priority = 5)
-	public void TestPostUserWithArray() {		
-	
-		logger.info("**************Creating User Array **************");	
+	public void TestPutPet() {
+		logger.info("************** Put Pet API call **************");	
+		petPayload.setName(faker.name().name());
+		Category get_category  = petPayload.getCategory();
+		//System.out.println("Get category: " + petPayload.getCategory());
+		//get_category.setId(faker.idNumber().hashCode());
+		petPayload.setCategory(get_category);
+		tags[1].setName(faker.name().name());
+		petPayload.setTags(tags);
+		petPayload.setStatus("sold");
 		
-		Response res = UserEndPoints.createUserWithArray(userarray);
+		Response res = PetEndPoints.putPet(petPayload);
 		res.then().log().all();
-		
-		// Verify the response status code
 		Assert.assertEquals(res.getStatusCode(), 200);
 		
-        // Verify the response content type
-        Assert.assertEquals(res.getContentType(), "application/json", "Expected content type is application/json");
+		// Print the response body
+		System.out.println("Response Body for Put pet API call: " + res.getBody().asString());
 		
-        // Print the response body
-		System.out.println("Created Array Of Users Response Body is: " + res.getBody().asString());
-		
-		logger.info("**************User Array is Created **************");
+		logger.info("**************Put Pet API Call done **************");
 	}
 	
 	@Test(priority = 6)
-	public void TestGetListUserByName() {
+	public void UpdatePetFormdata() {
+		logger.info("**************Updating Pet Form Data **************");	
+		String name_v = faker.name().name();
+		String status_v = "available";
+		System.out.println("name_v: " + name_v);
+		Response res = PetEndPoints.updatePet(this.petPayload.getId(), name_v, status_v);		
+		res.then().log().all();
+		Assert.assertEquals(res.getStatusCode(), 200);
 		
-		logger.info("**************Reading List User Name **************");
+		// Print the response body
+		System.out.println("Response Body for updated Pet is: " + res.getBody().asString());
 		
-		System.out.println("Username = " + this.users.getFirst().getUsername());
-		System.out.println("Username uuuu = " + this.users.get(2).getUsername());
-	
-		for (int i = 0; i< users.size(); i++) {
-			Response res = UserEndPoints.readUser(this.users.get(i).getUsername());
-			
-			res.then().log().all();
-						
-			// Verify the response status code
-			Assert.assertEquals(res.getStatusCode(), 200);
-			
-			// Print the response body
-			System.out.println("Get Call Response Body is: " + res.getBody().asString());
-		}
-		logger.info("**************UserNames from List is displayed **************");
-	}
+		logger.info("**************Updating Pet Form Data **************");
+	}	
 	
 	@Test(priority = 7)
-	public void TestGetArrayUserByName() {
+	public void TestDeletePetByPetID() {
+		logger.info("**************Deleting Pet **************");
+		Response res = PetEndPoints.deletePet(this.petPayload.getId());
+		res.then().log().all();
+		res.statusCode();
+		Assert.assertEquals(res.getStatusCode(), 200);
 		
-		logger.info("**************Reading UserName from Array  **************");
-		
-		System.out.println("Userarray[0]  = " + this.userarray[0].getUsername());
-		
-		
-		for (int i = 0; i< userarray.length; i++) {
-			Response res = UserEndPoints.readUser(this.userarray[i].getUsername());
-			
-			res.then().log().all();
-						
-			// Verify the response status code
-			Assert.assertEquals(res.getStatusCode(), 200);
-			
-			// Print the response body
-			System.out.println("Get Call Response Body is: " + res.getBody().asString());
-		}
-		logger.info("**************Array UserNames is displayed **************");
-*/
-	
+		// Print the response body
+		System.out.println("Response Body for updated Pet is: " + res.getBody().asString());
+		logger.info("**************Pet is Deleted **************");
+	}	
 }
-	
 	
 

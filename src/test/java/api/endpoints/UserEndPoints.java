@@ -72,6 +72,5 @@ public class UserEndPoints {
 			.post(Routes.create_with_array_url);
 		return res;		
 	}
-	
 
 }

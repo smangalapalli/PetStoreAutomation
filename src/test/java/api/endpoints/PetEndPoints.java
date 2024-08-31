@@ -1,25 +1,23 @@
 package api.endpoints;
 
 import static io.restassured.RestAssured.given;
-
-import java.util.List;
-
+import java.io.File;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import api.payload.*;
 
-//UserEndPoints.java
-//Created for Performing Create, Read, Update and Delete requests for the User API
+//PetEndPoints.java
+//Created for Performing Create, Upload, Read, Update and Delete requests for the Pet API
 
 public class PetEndPoints {
 	
-	//Create User
+	//Create Pet
 	
 	public static Response createPet(Pet payload){
 		Response res = given()
 			.contentType(ContentType.JSON)
-			.accept(ContentType.JSON)
+			.accept(ContentType.JSON)			
 			.body(payload)
 		.when()
 			.post(Routes.create_pet_url);
@@ -28,8 +26,7 @@ public class PetEndPoints {
 	
 	public static Response readStatus(){
 		Response res = given()
-			.queryParam("status", "pending")
-			//.pathParam("username", userName)
+			.queryParam("status", "pending")			
 		.when()
 			.get(Routes.find_pet_by_status_url);
 		return res;		
@@ -43,45 +40,47 @@ public class PetEndPoints {
 		return res;		
 	}
 	
-	
-	/*public static Response updateUser(String userName, User payload){
+	public static Response updatePet(int petID, String namevalue, String statusvalue){
 		Response res = given()
-			.contentType(ContentType.JSON)
+			.contentType(ContentType.URLENC)
 			.accept(ContentType.JSON)
-			.pathParam("username", userName)
-			.body(payload)
+			.formParam("name", namevalue)
+			.formParam("status", statusvalue)	
+			.pathParam("petId", petID)
 		.when()
-			.put(Routes.update_url);
+			.post(Routes.update_pet_url);
 		return res;
 	}
 	
-	public static Response deleteUser(String userName){
+	public static Response uploadImage(int petID, File imageFile, String metadata){
 		Response res = given()
-			.pathParam("username", userName)
-		.when()
-			.delete(Routes.delete_url);
-		return res;		
-	}
-	
-	public static Response createUserWithList(List<User> users){
-		Response res = given()
-			.contentType(ContentType.JSON)
+			.contentType(ContentType.MULTIPART)
 			.accept(ContentType.JSON)
-			.body(users)
+			.multiPart("file", imageFile, "image/jpeg")
+			.multiPart("additionalMetadata", metadata)
+			.pathParam("petId", petID)
 		.when()
-			.post(Routes.create_with_list_url);
-		return res;		
+			.post(Routes.upload_pet_image_url);
+		return res;
 	}
 		
-	public static Response createUserWithArray(User[] userarray){
+	public static Response deletePet(int petID){
+		Response res = given()
+			.pathParam("petId", petID)
+		.when()
+			.delete(Routes.delete_pet_url);
+		return res;		
+	}
+	
+	public static Response putPet(Pet payload){
 		Response res = given()
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
-			.body(userarray)
+			
+			.body(payload)
 		.when()
-			.post(Routes.create_with_array_url);
+			.put(Routes.create_pet_url);
 		return res;		
-	}*/
-	
+	}	
 
 }

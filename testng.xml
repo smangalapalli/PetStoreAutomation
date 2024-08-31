@@ -6,9 +6,11 @@
 </listeners>
   <test thread-count="5" name="PetTests">
     <classes>
-      <!-- <class name="api.test.UserTests"/> -->
+       <class name="api.test.UserTests"/> 
       <!-- <class name="api.test.DDTests"/> -->
-      <class name="api.test.UserTests2"/> <!--Read the tests from UserTests2 to check the routes.properties file change -->
+      <!-- <class name="api.test.UserTests2"/> Read the tests from UserTests2 to check the routes.properties file change -->
+       <class name="api.test.PetTests"/>  
+       <class name="api.test.StoreTests"/>
     </classes>
   </test> <!-- PetTests -->
 </suite> <!-- PetSuite -->

@@ -52,8 +52,7 @@ public class UserTests {
         user1.setEmail(faker.internet().safeEmailAddress());
         user1.setPassword(faker.internet().password(5, 10));
         user1.setPhone(faker.phoneNumber().cellPhone());
-        //user1.setUserStatus(0);
-
+        
         // Create user 2
         faker = new Faker();
         User user2 = new User();
@@ -64,8 +63,7 @@ public class UserTests {
         user2.setEmail(faker.internet().safeEmailAddress());
         user2.setPassword(faker.internet().password(5, 10));
         user2.setPhone(faker.phoneNumber().cellPhone());
-        //user2.setUserStatus(0);
-
+        
         // Create user 3
         faker = new Faker();
         User user3 = new User();
@@ -76,8 +74,7 @@ public class UserTests {
         user3.setEmail(faker.internet().safeEmailAddress());
         user3.setPassword(faker.internet().password(5, 10));
         user3.setPhone(faker.phoneNumber().cellPhone());
-        //user3.setUserStatus(0);
-        
+                
         // Add users to the list
         users.add(user1);
         users.add(user2);
@@ -97,8 +94,7 @@ public class UserTests {
         user_a1.setLastName(faker.name().lastName());
         user_a1.setEmail(faker.internet().safeEmailAddress());
         user_a1.setPassword(faker.internet().password(5, 10));
-        user_a1.setPhone(faker.phoneNumber().cellPhone());
-        //user_a1.setUserStatus(0);
+        user_a1.setPhone(faker.phoneNumber().cellPhone());        
         userarray[0] = user_a1;
 
         // Create userarray[1]
@@ -110,8 +106,7 @@ public class UserTests {
         user_a2.setLastName(faker.name().lastName());
         user_a2.setEmail(faker.internet().safeEmailAddress());
         user_a2.setPassword(faker.internet().password(5, 10));
-        user_a2.setPhone(faker.phoneNumber().cellPhone());
-        //user_a2.setUserStatus(0);
+        user_a2.setPhone(faker.phoneNumber().cellPhone());        
         userarray[1] = user_a2;
 
         // Create userarray[2]
@@ -123,8 +118,7 @@ public class UserTests {
         user_a3.setLastName(faker.name().lastName());
         user_a3.setEmail(faker.internet().safeEmailAddress());
         user_a3.setPassword(faker.internet().password(5, 10));
-        user_a3.setPhone(faker.phoneNumber().cellPhone());
-        //user_a3.setUserStatus(0);      
+        user_a3.setPhone(faker.phoneNumber().cellPhone());              
         userarray[2] = user_a3;      
         
         // Add users to the Array
@@ -132,8 +126,7 @@ public class UserTests {
         //userarray[1] = user_a2;
         //userarray[2] = user_a3;
                 
-        
-		//logs
+        //logs
 		logger = LogManager.getLogger(this.getClass());
 		
 	}	
@@ -258,8 +251,7 @@ public class UserTests {
 		
 		logger.info("**************Reading UserName from Array  **************");
 		
-		System.out.println("Userarray[0]  = " + this.userarray[0].getUsername());
-		
+		System.out.println("Userarray[0]  = " + this.userarray[0].getUsername());		
 		
 		for (int i = 0; i< userarray.length; i++) {
 			Response res = UserEndPoints.readUser(this.userarray[i].getUsername());
